@@ -56,6 +56,11 @@ struct ContentView: View {
 
                 VStack(spacing: 12) {
                     VStack(spacing: 8) {
+                        Text("🔥 Arbitrage Bets")
+                            .font(.title)
+                            .bold()
+                            .padding(.top, 2) // adjust as needed
+
                         HStack {
                             Picker("League", selection: $selectedLeague) {
                                 ForEach(leagues, id: \.self) { league in
@@ -73,12 +78,13 @@ struct ContentView: View {
 
                             Picker("Sort By", selection: $sortBy) {
                                 Text("Arb %").tag("arb")
-                                Text("Newest").tag("timestamp")
+                                Text("Most Recent").tag("timestamp")
                             }
                             .pickerStyle(MenuPickerStyle())
                         }
                         .padding(.horizontal)
                     }
+
 
                     if viewModel.isLoading {
                         ProgressView("Loading Bets...")
@@ -102,7 +108,8 @@ struct ContentView: View {
                     }
                 }
             }
-            .navigationTitle("🔥 Arbitrage Bets")
+//            .navigationTitle("🔥 Arbitrage Bets")
+//            .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 viewModel.fetchBets()
             }
@@ -110,6 +117,7 @@ struct ContentView: View {
                 BetDetailView(bet: bet, selectedBook: selectedBook)
             }
         }
+        .navigationBarHidden(true)
     }
 }
 
