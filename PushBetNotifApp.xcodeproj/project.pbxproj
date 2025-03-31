@@ -12,6 +12,13 @@
 		80731FAA2D9A74080086A0FA /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 80731FA92D9A74080086A0FA /* FirebaseAnalyticsWithoutAdIdSupport */; };
 		80731FAC2D9A74080086A0FA /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 80731FAB2D9A74080086A0FA /* FirebaseAppCheck */; };
 		80731FAE2D9A74080086A0FA /* FirebaseAppDistribution-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 80731FAD2D9A74080086A0FA /* FirebaseAppDistribution-Beta */; };
+		80A49B8A2D9AF8AA0003FB4E /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 80A49B892D9AF8AA0003FB4E /* FirebaseAnalytics */; };
+		80A49B8C2D9AF8AA0003FB4E /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 80A49B8B2D9AF8AA0003FB4E /* FirebaseAppCheck */; };
+		80A49B8E2D9AF8AA0003FB4E /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 80A49B8D2D9AF8AA0003FB4E /* FirebaseAuth */; };
+		80A49B902D9AF8AA0003FB4E /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 80A49B8F2D9AF8AA0003FB4E /* FirebaseCore */; };
+		80A49B922D9AF8AA0003FB4E /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 80A49B912D9AF8AA0003FB4E /* FirebaseFirestore */; };
+		80A49B942D9AF8AA0003FB4E /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 80A49B932D9AF8AA0003FB4E /* FirebaseMessaging */; };
+		80A49B962D9AF8AA0003FB4E /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 80A49B952D9AF8AA0003FB4E /* FirebaseRemoteConfig */; };
 		AA360F74FD8580674F070767 /* Pods_PushBetNotifApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B923F1EA4AA948F9AE80888A /* Pods_PushBetNotifApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -77,11 +84,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80A49B942D9AF8AA0003FB4E /* FirebaseMessaging in Frameworks */,
+				80A49B8C2D9AF8AA0003FB4E /* FirebaseAppCheck in Frameworks */,
+				80A49B8A2D9AF8AA0003FB4E /* FirebaseAnalytics in Frameworks */,
 				80731FA62D9A74080086A0FA /* FirebaseAnalytics in Frameworks */,
 				80731FA82D9A74080086A0FA /* FirebaseAnalyticsOnDeviceConversion in Frameworks */,
+				80A49B8E2D9AF8AA0003FB4E /* FirebaseAuth in Frameworks */,
 				AA360F74FD8580674F070767 /* Pods_PushBetNotifApp.framework in Frameworks */,
+				80A49B902D9AF8AA0003FB4E /* FirebaseCore in Frameworks */,
 				80731FAC2D9A74080086A0FA /* FirebaseAppCheck in Frameworks */,
 				80731FAA2D9A74080086A0FA /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
+				80A49B962D9AF8AA0003FB4E /* FirebaseRemoteConfig in Frameworks */,
+				80A49B922D9AF8AA0003FB4E /* FirebaseFirestore in Frameworks */,
 				80731FAE2D9A74080086A0FA /* FirebaseAppDistribution-Beta in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -485,8 +499,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = PushBetNotifApp/PushBetNotifAppDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_ASSET_PATHS = "\"PushBetNotifApp/Preview Content\"";
 				DEVELOPMENT_TEAM = CW7KGG3U8R;
 				ENABLE_PREVIEWS = YES;
@@ -518,6 +534,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = PushBetNotifApp/PushBetNotifApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PushBetNotifApp/Preview Content\"";
@@ -694,6 +711,41 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 80731FA42D9A74080086A0FA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = "FirebaseAppDistribution-Beta";
+		};
+		80A49B892D9AF8AA0003FB4E /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 80731FA42D9A74080086A0FA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		80A49B8B2D9AF8AA0003FB4E /* FirebaseAppCheck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 80731FA42D9A74080086A0FA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAppCheck;
+		};
+		80A49B8D2D9AF8AA0003FB4E /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 80731FA42D9A74080086A0FA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		80A49B8F2D9AF8AA0003FB4E /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 80731FA42D9A74080086A0FA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		80A49B912D9AF8AA0003FB4E /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 80731FA42D9A74080086A0FA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		80A49B932D9AF8AA0003FB4E /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 80731FA42D9A74080086A0FA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		80A49B952D9AF8AA0003FB4E /* FirebaseRemoteConfig */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 80731FA42D9A74080086A0FA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseRemoteConfig;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

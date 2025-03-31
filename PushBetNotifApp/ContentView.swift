@@ -13,12 +13,14 @@ struct ContentView: View {
     @State private var selectedLeague: String = "All"
     @State private var selectedBook: String = "All"
     @State private var sortBy: String = "arb"
+    @State private var showingSettings = false
+    @State private var savedToken: String = UserDefaults.standard.string(forKey: "fcmToken") ?? ""
+    @State private var selectedBooks: [String] = []
 
     let leagues = ["All", "NFL", "NBA", "MLB", "NHL", "NCAAF", "NCAAB", "Soccer", "Tennis", "Golf", "UFC"]
-    let books = ["All", "DraftKings", "Bet365", "BetMGM", "ESPN BET", "FanDuel", "Hard Rock",
+    let books = ["DraftKings", "Bet365", "BetMGM", "ESPN BET", "FanDuel", "Hard Rock",
                  "BetRivers", "Caesars", "Fanatics", "Fliff", "PointsBet", "Pinnacle",
                  "Circa", "BookMaker", "BetOnline", "Bet105"]
-    let sortOptions = ["arb", "timestamp"]
 
     var filteredBets: [Bet] {
         viewModel.bets
@@ -56,10 +58,19 @@ struct ContentView: View {
 
                 VStack(spacing: 12) {
                     VStack(spacing: 8) {
-                        Text("🔥 Arbitrage Bets")
-                            .font(.title)
-                            .bold()
-                            .padding(.top, 2) // adjust as needed
+                        HStack {
+                            Text("🔥 Arbitrage Bets")
+                                .font(.title)
+                                .bold()
+                            Spacer()
+                            Button(action: {
+                                showingSettings = true
+                            }) {
+                                Image(systemName: "bell.badge")
+                                    .font(.title2)
+                            }
+                        }
+                        .padding(.horizontal)
 
                         HStack {
                             Picker("League", selection: $selectedLeague) {
@@ -70,6 +81,7 @@ struct ContentView: View {
                             .pickerStyle(MenuPickerStyle())
 
                             Picker("Book", selection: $selectedBook) {
+                                Text("All").tag("All")
                                 ForEach(books, id: \.self) { book in
                                     Text(book).tag(book)
                                 }
@@ -84,7 +96,6 @@ struct ContentView: View {
                         }
                         .padding(.horizontal)
                     }
-
 
                     if viewModel.isLoading {
                         ProgressView("Loading Bets...")
@@ -108,18 +119,36 @@ struct ContentView: View {
                     }
                 }
             }
-//            .navigationTitle("🔥 Arbitrage Bets")
-//            .navigationBarTitleDisplayMode(.inline)
             .onAppear {
                 viewModel.fetchBets()
+                fetchSavedNotificationBooks()
             }
             .sheet(item: $selectedBet) { bet in
                 BetDetailView(bet: bet, selectedBook: selectedBook)
             }
+            .sheet(isPresented: $showingSettings) {
+                NotificationSettingsView(isPresented: $showingSettings, books: books)
+            }
+
         }
         .navigationBarHidden(true)
     }
+
+    func fetchSavedNotificationBooks() {
+        guard let uid = UserDefaults.standard.string(forKey: "firebaseUID"),
+              let url = URL(string: "https://exchangesvssportsbooks.com/api/get_subscriptions?uid=\(uid)") else { return }
+
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            guard let data = data,
+                  let result = try? JSONDecoder().decode([String].self, from: data) else { return }
+            DispatchQueue.main.async {
+                selectedBooks = result
+            }
+        }.resume()
+    }
+
 }
+
 
 struct BetCardView: View {
     let bet: Bet
