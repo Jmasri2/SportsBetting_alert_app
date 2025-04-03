@@ -11,6 +11,8 @@ import FirebaseMessaging
 import UserNotifications
 import FirebaseFirestore
 import FirebaseAuth
+import AuthenticationServices
+
 
 @main
 struct PushBetNotifApp: App {
@@ -48,13 +50,39 @@ struct PushBetNotifApp: App {
                         if FirebaseApp.app() != nil {
                             firebaseInitialized = true
                             isSignedIn = Auth.auth().currentUser != nil
+                            
+                            if isSignedIn {
+                               checkAppleIDCredentialState()
+                            }
                         }
                     }
+
+            }
+        }
+    }
+    
+    func checkAppleIDCredentialState() {
+        guard let userID = UserDefaults.standard.string(forKey: "appleUserID") else {
+            print("❌ No saved Apple user ID.")
+            return
+        }
+
+        ASAuthorizationAppleIDProvider().getCredentialState(forUserID: userID) { state, error in
+            switch state {
+            case .authorized:
+                print("✅ Apple ID is still valid.")
+            case .revoked, .notFound:
+                print("🚫 Apple ID was revoked or not found.")
+                DispatchQueue.main.async {
+                    try? Auth.auth().signOut()
+                    isSignedIn = false
+                }
+            default:
+                print("🤔 Unknown credential state.")
             }
         }
     }
 
-    
 }
 
 
@@ -158,4 +186,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.banner, .sound])
     }
+    
+    
+    
 }

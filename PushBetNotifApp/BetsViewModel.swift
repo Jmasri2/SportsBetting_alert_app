@@ -22,14 +22,13 @@ class BetsViewModel: ObservableObject {
         }
 
         isLoading = true
+        let fetchStartTime = Date() // 🔸 Track when the fetch started
 
         let decoder = JSONDecoder()
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        // Explicitly use New York timezone (EST/EDT)
         formatter.timeZone = TimeZone(identifier: "America/New_York")
         decoder.dateDecodingStrategy = .formatted(formatter)
-
 
         URLSession.shared.dataTaskPublisher(for: url)
             .tryMap { data, response -> Data in
@@ -42,9 +41,17 @@ class BetsViewModel: ObservableObject {
             .decode(type: [Bet].self, decoder: decoder)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
-                self?.isLoading = false
-                if case let .failure(error) = completion {
-                    print("❌ Error fetching bets: \(error)")
+                guard let self = self else { return }
+
+                // 🔸 Make sure loading lasts at least 0.6 seconds
+                let elapsed = Date().timeIntervalSince(fetchStartTime)
+                let delay = max(0.6 - elapsed, 0)
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                    self.isLoading = false
+                    if case let .failure(error) = completion {
+                        print("❌ Error fetching bets: \(error)")
+                    }
                 }
             }, receiveValue: { [weak self] bets in
                 print("✅ Successfully fetched \(bets.count) bets")
@@ -52,4 +59,5 @@ class BetsViewModel: ObservableObject {
             })
             .store(in: &cancellables)
     }
+
 }

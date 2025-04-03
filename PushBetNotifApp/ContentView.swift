@@ -16,6 +16,7 @@ struct ContentView: View {
     @State private var showingSettings = false
     @State private var savedToken: String = UserDefaults.standard.string(forKey: "fcmToken") ?? ""
     @State private var selectedBooks: [String] = []
+    
 
     let leagues = ["All", "NFL", "NBA", "MLB", "NHL", "NCAAF", "NCAAB", "Soccer", "Tennis", "Golf", "UFC"]
     let books = ["DraftKings", "Bet365", "BetMGM", "ESPN BET", "FanDuel", "Hard Rock",
@@ -57,53 +58,65 @@ struct ContentView: View {
                 Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all)
 
                 VStack(spacing: 12) {
-                    VStack(spacing: 8) {
-                        HStack {
-                            Text("🔥 Arbitrage Bets")
-                                .font(.title)
-                                .bold()
-                            Spacer()
-                            Button(action: {
-                                showingSettings = true
-                            }) {
-                                Image(systemName: "bell.badge")
-                                    .font(.title2)
-                            }
+                    // Header Row with Logo + Title + Bell
+                    HStack {
+                        Image("AppLogoMini")
+                            .resizable()
+                            .frame(width: 28, height: 28)
+                            .clipShape(RoundedRectangle(cornerRadius: 6))
+
+                        Spacer()
+
+                        Text("Value Opportunities")
+                            .font(.title)
+                            .bold()
+
+                        Spacer()
+
+                        Button(action: {
+                            showingSettings = true
+                        }) {
+                            Image(systemName: "bell.badge")
+                                .font(.title2)
                         }
-                        .padding(.horizontal)
-
-                        HStack {
-                            Picker("League", selection: $selectedLeague) {
-                                ForEach(leagues, id: \.self) { league in
-                                    Text(league).tag(league)
-                                }
-                            }
-                            .pickerStyle(MenuPickerStyle())
-
-                            Picker("Book", selection: $selectedBook) {
-                                Text("All").tag("All")
-                                ForEach(books, id: \.self) { book in
-                                    Text(book).tag(book)
-                                }
-                            }
-                            .pickerStyle(MenuPickerStyle())
-
-                            Picker("Sort By", selection: $sortBy) {
-                                Text("Arb %").tag("arb")
-                                Text("Most Recent").tag("timestamp")
-                            }
-                            .pickerStyle(MenuPickerStyle())
-                        }
-                        .padding(.horizontal)
                     }
+                    .padding(.horizontal)
 
-                    if viewModel.isLoading {
-                        ProgressView("Loading Bets...")
-                    } else if filteredBets.isEmpty {
-                        Text("No arbitrage bets found.")
-                            .foregroundColor(.secondary)
-                    } else {
-                        ScrollView {
+                    // Filters
+                    HStack {
+                        Picker("League", selection: $selectedLeague) {
+                            ForEach(leagues, id: \.self) { league in
+                                Text(league).tag(league)
+                            }
+                        }
+                        .pickerStyle(MenuPickerStyle())
+
+                        Picker("Book", selection: $selectedBook) {
+                            Text("All").tag("All")
+                            ForEach(books, id: \.self) { book in
+                                Text(book).tag(book)
+                            }
+                        }
+                        .pickerStyle(MenuPickerStyle())
+
+                        Picker("Sort By", selection: $sortBy) {
+                            Text("Arb %").tag("arb")
+                            Text("Most Recent").tag("timestamp")
+                        }
+                        .pickerStyle(MenuPickerStyle())
+                    }
+                    .padding(.horizontal)
+
+                    // Scrollable List
+                    ScrollView {
+                        if viewModel.isLoading {
+                            ProgressView("Loading Bets...")
+                                .padding()
+                        } else if filteredBets.isEmpty {
+                            Text("No arbitrage bets found.")
+                                .foregroundColor(.secondary)
+                                .padding()
+                        } else {
                             LazyVStack(spacing: 12) {
                                 ForEach(filteredBets) { bet in
                                     Button {
@@ -117,8 +130,12 @@ struct ContentView: View {
                             .padding()
                         }
                     }
+                    .refreshable {
+                        viewModel.fetchBets()
+                    }
                 }
             }
+            .navigationBarHidden(true)
             .onAppear {
                 viewModel.fetchBets()
                 fetchSavedNotificationBooks()
@@ -129,9 +146,7 @@ struct ContentView: View {
             .sheet(isPresented: $showingSettings) {
                 NotificationSettingsView(isPresented: $showingSettings, books: books)
             }
-
         }
-        .navigationBarHidden(true)
     }
 
     func fetchSavedNotificationBooks() {
@@ -146,8 +161,8 @@ struct ContentView: View {
             }
         }.resume()
     }
-
 }
+
 
 
 struct BetCardView: View {
